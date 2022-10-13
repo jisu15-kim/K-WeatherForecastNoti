@@ -13,7 +13,7 @@
 import Foundation
 
 // MARK: - Welcome
-struct HourWeatherData: Codable {
+struct CurrentWeatherData: Codable {
     let response: Response
 }
 
@@ -26,19 +26,19 @@ struct Response: Codable {
 // MARK: - Body
 struct Body: Codable {
     let dataType: String?
-    let items: HourWeatherItems
+    let items: CurrentWeatherItems
     let pageNo: Int?
     let numOfRows: Int?
     let totalCount: Int?
 }
 
 // MARK: - Items
-struct HourWeatherItems: Codable {
-    let item: [HourWeatherItem]
+struct CurrentWeatherItems: Codable {
+    let item: [CurrentWeatherItem]
 }
 
 // MARK: - Item
-struct HourWeatherItem: Codable {
+struct CurrentWeatherItem: Codable {
     let baseDate: String?
     let baseTime: String?
     let category: String? // 🔥
@@ -56,15 +56,17 @@ struct Header: Codable {
     let resultMsg: String?
 }
 
+// Processed Data
 struct CurrentWeatherModel {
     let pty: String // 강수량
     let reh: String //습도
     let rn1: String // 1시간 강수량
-    let t1h: String //기온
+    var t1h: String //기온
     let uuu: String //풍속
     let vec: String // 풍향 ??
     let vvv: String // 풍속 ??
     let wsd: String // 풍속 ??
+    let time: String
 }
 
 enum PTYModel: Int {

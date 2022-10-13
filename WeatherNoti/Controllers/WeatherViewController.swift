@@ -12,37 +12,61 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var currentDegreeLabel: UILabel!
     @IBOutlet weak var shortLocateLabel: UILabel!
-    @IBOutlet weak var feelingDegreeLabel: UILabel!
+    @IBOutlet weak var updateTimeLabel: UILabel!
     @IBOutlet weak var currentWeatherImage: UIImageView!
     @IBOutlet weak var hourCollectionView: UICollectionView!
     
-    var hourDataManager = HourDataManager()
-    var networkManager = NetworkManager.shared
-    var userInfo = UserInfo.shared
-    var hourData: [HourWeatherModel] = []
-    var hourWeatherData: [HourWeatherItem] = []
-    var currentData: CurrentWeatherModel?
+    private var currentDataManager = CurrentDataManager()
+    private var shortDataManager = ShortDataManager()
+    private var networkManager = NetworkManager.shared
+    private var skyIconManager = SkyIconManager()
+    
+    private var shortData: [ShortWeatherModel] = []
     // 컬렌션뷰의 레이아웃 담당 객체
-    var flowLayout = UICollectionViewFlowLayout()
+    private var flowLayout = UICollectionViewFlowLayout()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupInit()
-        setupData()
         setupCollectionViewLayout()
-        setupNetworks()
+        currentDataManager.setupCurrentNetworks()
+        shortDataManager.setupShortNetworks()
     }
     
     // 초기 한번 데이터 세팅
     func setupInit() {
-        hourDataManager.fetchHourData()
         hourCollectionView.delegate = self
         hourCollectionView.dataSource = self
         view.backgroundColor = UIColor(red: 16, green: 16, blue: 59, a: 255)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchShortNetworkUI(_:)), name: .shortWeatherData, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchCurrentNetworkUI(_:)), name: .currentWeatherData, object: nil)
     }
     
-    func setupData() {
-        hourData = hourDataManager.getHourData()
+    // CurrentDataManager에서 완료된 데이터를 받음
+    @objc func fetchCurrentNetworkUI(_ data: Notification) {
+        
+        if let currentModel = data.object as? CurrentWeatherModel {
+            
+            let pty = Int(currentModel.pty)!
+            var time = currentModel.time
+            let intTime = Int(time)!
+            // 아이콘 추출하는 함수로 들어감
+            let icon = skyIconManager.currentSkyIconLogic(pty: pty, time: intTime)
+            self.currentDegreeLabel.text = currentModel.t1h
+            self.currentWeatherImage.image = icon
+            
+            // 시간 중간에 : 넣기
+            time.insert(contentsOf: ":", at: time.index(time.startIndex, offsetBy: 2))
+            self.updateTimeLabel.text = "\(time) 업데이트 기준"
+        }
+    }
+    // ShortDataManager에서 완료된 데이터를 받음
+    @objc func fetchShortNetworkUI(_ data: Notification) {
+
+        if let shortModel = data.object as? [ShortWeatherModel] {
+            self.shortData = shortModel
+            self.hourCollectionView.reloadData()
+        }
     }
     
     func setupCollectionViewLayout() {
@@ -56,70 +80,11 @@ class WeatherViewController: UIViewController {
         hourCollectionView.collectionViewLayout = flowLayout
     }
     
-    private func setupNetworks() {
-        let today = userInfo.getCurrentDate()
-        let now = userInfo.getCurrentTime()
-//        let today = "20221011"
-//        let now = "1940"
-        let nx = 55
-        let ny = 127
-        
-        networkManager.fetchCurrentWeatherData(date: today, time: now, nx: nx, ny: ny) { result in
-            //print("VC의 네트워크매니저 FetchData 실행")
-            switch result {
-            case .success(let successedData):
-                self.hourWeatherData = successedData
-                // currentData 구조체로 요약 및 생성
-                self.processData(array: successedData)
-                
-                // 비동기 (네트워크 처리 이후 실행되는 코드)
-                DispatchQueue.main.async {
-                    self.setupCurrentUI()
-                    dump(self.hourWeatherData)
-                    self.hourCollectionView.reloadData()
-                }
-            case.failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-        
-        networkManager.fetchCurrentWeatherData(date: today, time: now, nx: nx, ny: ny) { result in
-            //print("VC의 네트워크매니저 FetchData 실행")
-            switch result {
-            case .success(let successedData):
-                self.hourWeatherData = successedData
-                // currentData 구조체로 요약 및 생성
-                self.processData(array: successedData)
-                
-                // 비동기 (네트워크 처리 이후 실행되는 코드)
-                DispatchQueue.main.async {
-                    self.setupCurrentUI()
-                    dump(self.hourWeatherData)
-                    self.hourCollectionView.reloadData()
-                }
-            case.failure(let error):
-                print(error.localizedDescription)
-            }
-        }
-    }
-    
-    func processData(array: [HourWeatherItem]) {
-        var data: [String:String] = [:]
-        for item in array {
-            data.updateValue(item.obsrValue ?? "", forKey: item.category ?? "")
-        }
-        dump("딕셔너리: \(data)")
-        currentData = CurrentWeatherModel(pty: data["PTY"]!, reh: data["REH"]!, rn1: data["RN1"]!, t1h: data["T1H"]!, uuu: data["UUU"]!, vec: data["VEC"]!, vvv: data["VVV"]!, wsd: data["WSD"]!)
-    }
-    
     @IBAction func tempButtonTapped(_ sender: Any) {
-        setupNetworks()
+        currentDataManager.setupCurrentNetworks()
+        shortDataManager.setupShortNetworks()
     }
-    
-    func setupCurrentUI() {
-        currentDegreeLabel.text = currentData?.t1h
-        
-    }
+
     
 }
 
@@ -129,18 +94,32 @@ extension WeatherViewController: UICollectionViewDelegate {
 
 extension WeatherViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return hourData.count
+        return shortData.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = hourCollectionView.dequeueReusableCell(withReuseIdentifier: "HourWeatherCell", for: indexPath) as! HourWeatherCell
-        let data = hourData[indexPath.row]
+        let data = shortData[indexPath.row]
+        let skyData = Int(data.sky)!
+        let ptyData = Int(data.pty)!
+        let time = Int(data.time)!
+
+        // 아이콘 정보 받아오는 로직
+        let icon = skyIconManager.shortSkyIconLogic(sky: skyData, pty: ptyData, time: time)
         
-        //print(data)
+        // 텍스트 변환
+        var stringTime = String(time)
+        if time != 0 {
+            stringTime.removeLast(2)
+            stringTime.append("시")
+        } else {
+            stringTime = "0시"
+        }
         
-        cell.hourImage.image = data.image
-        cell.hourLabel.text = "\(data.time)AM"
-        cell.hourDegree.text = String(data.degree)
+        // 데이터 전달
+        cell.hourImage.image = icon
+        cell.hourLabel.text = stringTime
+        cell.hourDegree.text = data.temp
         
         cell.layer.borderWidth = 2 // rgba(37,37,78,255)
         cell.layer.borderColor = CGColor(red: 37/255, green: 37/255, blue: 78/255, alpha: 255/255)
@@ -149,7 +128,6 @@ extension WeatherViewController: UICollectionViewDataSource {
         return cell
     }
 }
-
 
 extension UIColor {
     convenience init(red: Int, green: Int, blue: Int, a: Int = 0xFF) {

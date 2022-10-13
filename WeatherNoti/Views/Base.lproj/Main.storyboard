@@ -54,7 +54,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="2ov-Ab-Rc6">
-                                        <rect key="frame" x="85" y="67.5" width="130" height="101.5"/>
+                                        <rect key="frame" x="85" y="67.5" width="130" height="105"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="12" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c7j-lJ-mhe">
                                                 <rect key="frame" x="0.0" y="0.0" width="88.5" height="101.5"/>
@@ -86,14 +86,14 @@
                                         </constraints>
                                     </stackView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="당수동, 수원시" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a9S-k8-mXG">
-                                        <rect key="frame" x="115.5" y="190" width="69" height="14.5"/>
+                                        <rect key="frame" x="115.5" y="193.5" width="69" height="14.5"/>
                                         <fontDescription key="fontDescription" type="system" weight="light" pointSize="12"/>
                                         <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="체감온도 10℃" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8aU-8z-ryh">
-                                        <rect key="frame" x="108" y="225.5" width="84" height="17"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="252" text="15:00 업데이트 기준" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8aU-8z-ryh">
+                                        <rect key="frame" x="104" y="229" width="92.5" height="13.5"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="11"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <nil key="highlightedColor"/>
                                     </label>
@@ -189,11 +189,13 @@
                                     </collectionViewCell>
                                 </cells>
                             </collectionView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9qk-B4-Jkh">
-                                <rect key="frame" x="174" y="763" width="67" height="31"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Button"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9qk-B4-Jkh">
+                                <rect key="frame" x="337" y="336" width="20" height="20"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="20" id="LLo-vs-M2U"/>
+                                    <constraint firstAttribute="height" constant="20" id="vZl-gM-DcT"/>
+                                </constraints>
+                                <buttonConfiguration key="configuration" style="tinted" image="arrow.clockwise" catalog="system"/>
                                 <connections>
                                     <action selector="tempButtonTapped:" destination="BYZ-38-t0r" eventType="touchUpInside" id="VE9-MK-XnF"/>
                                 </connections>
@@ -204,6 +206,8 @@
                         <constraints>
                             <constraint firstItem="8cc-tU-dZg" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="0ON-4W-ZMX"/>
                             <constraint firstItem="8cc-tU-dZg" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="20" id="1aI-eZ-1WO"/>
+                            <constraint firstItem="9qk-B4-Jkh" firstAttribute="bottom" secondItem="X3N-1w-t4a" secondAttribute="bottom" id="6LK-6A-Zx6"/>
+                            <constraint firstItem="9qk-B4-Jkh" firstAttribute="trailing" secondItem="X3N-1w-t4a" secondAttribute="trailing" id="DPi-wG-sBg"/>
                             <constraint firstItem="8cc-tU-dZg" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="352" id="Iat-Um-Lfi"/>
                             <constraint firstItem="X3N-1w-t4a" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="69.5" id="JPQ-pV-P30"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="X3N-1w-t4a" secondAttribute="trailing" constant="57" id="PsR-bQ-FFq"/>
@@ -216,9 +220,9 @@
                         <outlet property="currentDegreeLabel" destination="c7j-lJ-mhe" id="ctm-nd-1I5"/>
                         <outlet property="currentWeatherImage" destination="I1L-Ge-aSg" id="NyF-j4-spb"/>
                         <outlet property="dateLabel" destination="Gr1-gc-Zil" id="vFh-n7-VPE"/>
-                        <outlet property="feelingDegreeLabel" destination="8aU-8z-ryh" id="Cmk-dL-uUK"/>
                         <outlet property="hourCollectionView" destination="8cc-tU-dZg" id="AhA-s5-W4W"/>
                         <outlet property="shortLocateLabel" destination="a9S-k8-mXG" id="axM-3O-VUr"/>
+                        <outlet property="updateTimeLabel" destination="8aU-8z-ryh" id="FcN-3p-ygz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -227,6 +231,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="arrow.clockwise" catalog="system" width="115" height="128"/>
         <image name="cloud.heavyrain.fill" catalog="system" width="125" height="128"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

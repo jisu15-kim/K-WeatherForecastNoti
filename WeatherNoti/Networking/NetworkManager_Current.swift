@@ -25,7 +25,7 @@ final class NetworkManager {
     // 여러객체를 추가적으로 생성하지 못하도록 설정
     private init() {}
     
-    typealias NetworkCompletion = (Result<[HourWeatherItem], NetworkError>) -> Void
+    typealias NetworkCompletion = (Result<[CurrentWeatherItem], NetworkError>) -> Void
 
     public func fetchCurrentWeatherData(date: String, time: String, nx: Int, ny: Int, completion: @escaping NetworkCompletion) {
         let urlString = "\(WeatherApi.requestUrl)\(WeatherApi.currentParam)?serviceKey=\(WeatherApi.serviceKey)&pageNo=1&numOfRows=1000&dataType=JSON&base_date=\(date)&base_time=\(time)&nx=\(nx)&ny=\(ny)"
@@ -72,12 +72,12 @@ final class NetworkManager {
     }
     
     // 받아본 데이터 분석하는 함수 (동기적 실행)
-    private func parseJSON(_ hourWeatherData: Data) -> [HourWeatherItem]? {
+    private func parseJSON(_ hourWeatherData: Data) -> [CurrentWeatherItem]? {
         // 성공
         do {
             // 우리가 만들어 놓은 구조체(클래스 등)로 변환하는 객체와 메서드
             // (JSON 데이터 ====> MusicData 구조체)
-            let hourWeatherData = try JSONDecoder().decode(HourWeatherData.self, from: hourWeatherData)
+            let hourWeatherData = try JSONDecoder().decode(CurrentWeatherData.self, from: hourWeatherData)
             return hourWeatherData.response.body.items.item
         // 실패
         } catch {
