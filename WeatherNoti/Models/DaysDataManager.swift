@@ -17,14 +17,12 @@ final class DaysDataManager {
     private var daysWeatherModels: [DaysWeatherModel] = []
     
     public func setupDaysNetworks() {
-        let today = userInfo.getNow()[1]
-        let now = userInfo.getNow()[0]
+        let today = userInfo.getDaysNowData()[1]
+        let now = userInfo.getDaysNowData()[0]
         
-        let nx = 55
-        let ny = 127
-        
-        networkManager.fetchDaysWeatherData(date: today, time: "202210141800", nx: nx, ny: ny) { result in
+        networkManager.fetchDaysWeatherData(time: "\(today)\(now)") { result in
             //print("VC의 네트워크매니저 FetchData 실행")
+            print("today: \(today) time: \(now)")
             switch result {
             case .success(let successedData):
                 self.daysWeatherData = successedData

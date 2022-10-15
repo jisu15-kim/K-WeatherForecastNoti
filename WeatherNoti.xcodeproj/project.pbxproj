@@ -23,6 +23,7 @@
 		CD75656228F30DB0004717B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD75656128F30DB0004717B3 /* Assets.xcassets */; };
 		CD75656528F30DB0004717B3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD75656328F30DB0004717B3 /* LaunchScreen.storyboard */; };
 		CDA2762528F8586500428435 /* SkyIconManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA2762428F8586500428435 /* SkyIconManager.swift */; };
+		CDC2C75728FAA06500A7ED8B /* GPSManger.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDC2C75628FAA06500A7ED8B /* GPSManger.swift */; };
 		CDE4F47928F99D680093B3A7 /* DaysWeatherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE4F47828F99D680093B3A7 /* DaysWeatherModel.swift */; };
 		CDE4F47B28F99E270093B3A7 /* NetWorkManager_Days.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE4F47A28F99E270093B3A7 /* NetWorkManager_Days.swift */; };
 		CDE4F47D28F9A1010093B3A7 /* DaysDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE4F47C28F9A1010093B3A7 /* DaysDataManager.swift */; };
@@ -48,6 +49,7 @@
 		CD75656428F30DB0004717B3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CD75656628F30DB0004717B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CDA2762428F8586500428435 /* SkyIconManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkyIconManager.swift; sourceTree = "<group>"; };
+		CDC2C75628FAA06500A7ED8B /* GPSManger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GPSManger.swift; sourceTree = "<group>"; };
 		CDE4F47828F99D680093B3A7 /* DaysWeatherModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaysWeatherModel.swift; sourceTree = "<group>"; };
 		CDE4F47A28F99E270093B3A7 /* NetWorkManager_Days.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWorkManager_Days.swift; sourceTree = "<group>"; };
 		CDE4F47C28F9A1010093B3A7 /* DaysDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaysDataManager.swift; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 			children = (
 				CD48EB9128F57F7500AAF98E /* Constants.swift */,
 				CD6FB8A028F72A2D00639E11 /* CustomNotificationCenter.swift */,
+				CDC2C75628FAA06500A7ED8B /* GPSManger.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -232,6 +235,7 @@
 				CD5E23A428F319E700C4096D /* WeatherViewController.swift in Sources */,
 				CD75655B28F30DB0004717B3 /* SceneDelegate.swift in Sources */,
 				CDE4F48128F9E3420093B3A7 /* DaysWeatherCell.swift in Sources */,
+				CDC2C75728FAA06500A7ED8B /* GPSManger.swift in Sources */,
 				CDE4F47928F99D680093B3A7 /* DaysWeatherModel.swift in Sources */,
 				CD48EB9228F57F7500AAF98E /* Constants.swift in Sources */,
 				CD6FB8A528F7335400639E11 /* ShortDataManager.swift in Sources */,

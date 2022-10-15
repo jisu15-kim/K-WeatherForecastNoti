@@ -16,13 +16,10 @@ final class ShortDataManager {
     
     private var shortWeatherModels: [ShortWeatherModel] = []
     
-    public func setupShortNetworks() {
+    public func setupShortNetworks(nx: Int, ny: Int) {
         let today = userInfo.getNow()[1]
         let now = userInfo.getNow()[0]
-        
-        let nx = 55
-        let ny = 127
-        
+
         networkManager.fetchShortWeatherData(date: today, time: now, nx: nx, ny: ny) { result in
             //print("VC의 네트워크매니저 FetchData 실행")
             switch result {

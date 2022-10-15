@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreLocation
 
 class WeatherViewController: UIViewController, UITableViewDelegate {
     
@@ -22,6 +23,7 @@ class WeatherViewController: UIViewController, UITableViewDelegate {
     private var daysDataManager = DaysDataManager()
     
     private var networkManager = NetworkManager.shared
+    private var gpsManager = GPSManager.shared
     private var skyIconManager = SkyIconManager()
     private var userInfo = UserInfo.shared
     
@@ -30,16 +32,22 @@ class WeatherViewController: UIViewController, UITableViewDelegate {
     private var daysData: [DaysWeatherModel] = []
     // 컬렌션뷰의 레이아웃 담당 객체
     private var flowLayout = UICollectionViewFlowLayout()
+    private var locationManager = CLLocationManager()
+    
+    private var latitude: Double?
+    private var longitude: Double?
+    
+    private var nx: Int?
+    private var ny: Int?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupInit()
         setupCollectionViewLayout()
-        currentDataManager.setupCurrentNetworks()
-        shortDataManager.setupShortNetworks()
-        daysDataManager.setupDaysNetworks()
         setupCurrentUI()
         setupNotificationCenter()
+        getLocationInfo()
+        daysDataManager.setupDaysNetworks()
     }
     
     // 초기 한번 데이터 세팅
@@ -49,6 +57,36 @@ class WeatherViewController: UIViewController, UITableViewDelegate {
         daysTableView.delegate = self
         daysTableView.dataSource = self
         view.backgroundColor = UIColor(red: 16, green: 16, blue: 59, a: 255)
+    }
+    
+    private func getLocationInfo(){
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.startUpdatingLocation()
+            print("GPS 받으러 갑니다")
+        }else{
+            print("GPS를 못받아왔어요")
+        }
+        locationManager.startUpdatingLocation()
+    }
+    
+    private func refreshData() {
+        currentDataManager.setupCurrentNetworks(nx: nx!, ny: ny!)
+        shortDataManager.setupShortNetworks(nx: nx!, ny: ny!)
+    }
+    
+    private func convertGPS() {
+        guard let lati = latitude else { return }
+        guard let long = longitude else { return }
+        print("위도 : \(lati), 경도 : \(long)")
+        let data = gpsManager.convertGRID_GPS(mode: 0, lat_X: lati, lng_Y: long)
+        nx = data.x
+        ny = data.y
+        refreshData()
     }
     
     private func setupNotificationCenter() {
@@ -110,8 +148,8 @@ class WeatherViewController: UIViewController, UITableViewDelegate {
     }
     
     @IBAction func tempButtonTapped(_ sender: Any) {
-        currentDataManager.setupCurrentNetworks()
-        shortDataManager.setupShortNetworks()
+        currentDataManager.setupCurrentNetworks(nx: nx!, ny: ny!)
+        shortDataManager.setupShortNetworks(nx: nx!, ny: ny!)
         daysDataManager.setupDaysNetworks()
 
     }
@@ -175,8 +213,19 @@ extension WeatherViewController: UITableViewDataSource {
         
         return cell
     }
-    
-    
+}
+
+extension WeatherViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = manager.location else { return }
+        let cor = location.coordinate
+        let lati: Double = Double(cor.latitude)
+        let longi: Double = Double(cor.longitude)
+        latitude = lati
+        longitude = longi
+        print("여기는 delegate 위도: \(lati), 경도: \(longi)")
+        convertGPS()
+    }
 }
 
 

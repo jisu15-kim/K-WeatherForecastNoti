@@ -14,14 +14,9 @@ final class CurrentDataManager {
     private var hourWeatherData: [CurrentWeatherItem] = []
     private var currentData: CurrentWeatherModel?
 
-    public func setupCurrentNetworks() {
+    public func setupCurrentNetworks(nx: Int, ny: Int) {
         let today = userInfo.getNow()[1]
         let now = userInfo.getNow()[0]
-        print(userInfo.getNow())
-//        let today = "20221011"
-//        let now = "1940"
-        let nx = 55
-        let ny = 127
         
         networkManager.fetchCurrentWeatherData(date: today, time: now, nx: nx, ny: ny) { result in
             switch result {

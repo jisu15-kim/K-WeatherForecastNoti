@@ -12,7 +12,7 @@ extension NetworkManager {
     
     typealias DaysWeatherCompletion = (Result<[DaysWeatherItem], NetworkError>) -> Void
     
-    public func fetchDaysWeatherData(date: String, time: String, nx: Int, ny: Int, completion: @escaping DaysWeatherCompletion) {
+    public func fetchDaysWeatherData(time: String, completion: @escaping DaysWeatherCompletion) {
         let urlString = "\(WeatherApi.daysRequestUrl)?serviceKey=\(WeatherApi.daysServiceKey)&pageNo=1&numOfRows=1000&dataType=JSON&regId=11B10101&tmFc=\(time)"
         
         //https://apis.data.go.kr/1360000/MidFcstInfoService/getMidTa?serviceKey=O%2FG920ZjfGIFYshoBYqghwh3hF22e6g9KOcQj6T2D1eAw6LqO18gKbSGOTmmvhyaVPkiQmnh3qQfhMNvU3A4YQ%3D%3D&pageNo=1&numOfRows=1000&dataType=JSON&regId=11B10101&tmFc=202210141800

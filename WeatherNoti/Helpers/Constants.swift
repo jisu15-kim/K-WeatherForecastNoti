@@ -57,6 +57,7 @@ public struct UserInfo {
         return model
     }
     
+    
     private func getYesterdayDate() -> String {
         let yesterday = Date(timeIntervalSinceNow:-86400)
         let yFormatter = DateFormatter()
@@ -93,6 +94,24 @@ public struct UserInfo {
         } else {
             // 혹시.. 모든값이 오류라면 ?
             return ["0200", getYesterdayDate()]
+        }
+    }
+    
+    func getDaysNowData() -> [String] {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .medium
+        formatter.dateFormat = "HHmm" //데이터 포멧 설정
+        let time = Int(formatter.string(from: Date()))! //문자열로 바꾸기
+        
+        if 0 <= time && time < 600 {
+            return ["1800", getYesterdayDate()]
+        } else if 600 <= time && time < 1800 {
+            return ["600", getCurrentDate()]
+        } else if 1800..<2359 ~= time {
+            return ["1800", getCurrentDate()]
+        } else {
+            // 혹시.. 모든값이 오류라면 ?
+            return ["1800", getYesterdayDate()]
         }
     }
     
