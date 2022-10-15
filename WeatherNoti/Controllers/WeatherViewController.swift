@@ -7,7 +7,7 @@
 
 import UIKit
 
-class WeatherViewController: UIViewController {
+class WeatherViewController: UIViewController, UITableViewDelegate {
     
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var currentDegreeLabel: UILabel!
@@ -15,13 +15,19 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var updateTimeLabel: UILabel!
     @IBOutlet weak var currentWeatherImage: UIImageView!
     @IBOutlet weak var hourCollectionView: UICollectionView!
+    @IBOutlet weak var daysTableView: UITableView!
     
     private var currentDataManager = CurrentDataManager()
     private var shortDataManager = ShortDataManager()
+    private var daysDataManager = DaysDataManager()
+    
     private var networkManager = NetworkManager.shared
     private var skyIconManager = SkyIconManager()
+    private var userInfo = UserInfo.shared
     
+    private var todayModel: TodayModel?
     private var shortData: [ShortWeatherModel] = []
+    private var daysData: [DaysWeatherModel] = []
     // 컬렌션뷰의 레이아웃 담당 객체
     private var flowLayout = UICollectionViewFlowLayout()
     
@@ -31,15 +37,30 @@ class WeatherViewController: UIViewController {
         setupCollectionViewLayout()
         currentDataManager.setupCurrentNetworks()
         shortDataManager.setupShortNetworks()
+        daysDataManager.setupDaysNetworks()
+        setupCurrentUI()
+        setupNotificationCenter()
     }
     
     // 초기 한번 데이터 세팅
-    func setupInit() {
+    private func setupInit() {
         hourCollectionView.delegate = self
         hourCollectionView.dataSource = self
+        daysTableView.delegate = self
+        daysTableView.dataSource = self
         view.backgroundColor = UIColor(red: 16, green: 16, blue: 59, a: 255)
+    }
+    
+    private func setupNotificationCenter() {
         NotificationCenter.default.addObserver(self, selector: #selector(fetchShortNetworkUI(_:)), name: .shortWeatherData, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(fetchCurrentNetworkUI(_:)), name: .currentWeatherData, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchDaysNetworkUI(_:)), name: .daysWeatherData, object: nil)
+    }
+    
+    private func setupCurrentUI() {
+        todayModel = userInfo.getCurrentTitleDate() // 오늘 정보 받아와 업데이트
+        guard let safeModel = todayModel else { return }
+        dateLabel.text = "\(safeModel.dayOfWeek), \(safeModel.date) \(safeModel.month)"
     }
     
     // CurrentDataManager에서 완료된 데이터를 받음
@@ -69,7 +90,15 @@ class WeatherViewController: UIViewController {
         }
     }
     
-    func setupCollectionViewLayout() {
+    @objc func fetchDaysNetworkUI(_ data: Notification) {
+
+        if let daysModel = data.object as? [DaysWeatherModel] {
+            self.daysData = daysModel
+            self.daysTableView.reloadData()
+        }
+    }
+    
+    private func setupCollectionViewLayout() {
         flowLayout.scrollDirection = .horizontal
         let cellWidth = hourCollectionView.frame.width / 4 - 20
         flowLayout.itemSize = CGSize(width: cellWidth, height: hourCollectionView.frame.height - 20)
@@ -83,6 +112,8 @@ class WeatherViewController: UIViewController {
     @IBAction func tempButtonTapped(_ sender: Any) {
         currentDataManager.setupCurrentNetworks()
         shortDataManager.setupShortNetworks()
+        daysDataManager.setupDaysNetworks()
+
     }
 
     
@@ -128,6 +159,26 @@ extension WeatherViewController: UICollectionViewDataSource {
         return cell
     }
 }
+
+extension WeatherViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return daysData.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = daysTableView.dequeueReusableCell(withIdentifier: "DaysWeatherCell", for: indexPath) as! DaysWeatherCell
+        let data = daysData[indexPath.row]
+        
+        cell.dayLabel.text = "\(data.day)일뒤"
+        cell.highTempLabel.text = "\(data.high)℃"
+        cell.lowTempLabel.text = "\(data.low)℃"
+        
+        return cell
+    }
+    
+    
+}
+
 
 extension UIColor {
     convenience init(red: Int, green: Int, blue: Int, a: Int = 0xFF) {

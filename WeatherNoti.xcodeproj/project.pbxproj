@@ -23,6 +23,10 @@
 		CD75656228F30DB0004717B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD75656128F30DB0004717B3 /* Assets.xcassets */; };
 		CD75656528F30DB0004717B3 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CD75656328F30DB0004717B3 /* LaunchScreen.storyboard */; };
 		CDA2762528F8586500428435 /* SkyIconManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA2762428F8586500428435 /* SkyIconManager.swift */; };
+		CDE4F47928F99D680093B3A7 /* DaysWeatherModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE4F47828F99D680093B3A7 /* DaysWeatherModel.swift */; };
+		CDE4F47B28F99E270093B3A7 /* NetWorkManager_Days.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE4F47A28F99E270093B3A7 /* NetWorkManager_Days.swift */; };
+		CDE4F47D28F9A1010093B3A7 /* DaysDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE4F47C28F9A1010093B3A7 /* DaysDataManager.swift */; };
+		CDE4F48128F9E3420093B3A7 /* DaysWeatherCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE4F48028F9E3420093B3A7 /* DaysWeatherCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +48,10 @@
 		CD75656428F30DB0004717B3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		CD75656628F30DB0004717B3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CDA2762428F8586500428435 /* SkyIconManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SkyIconManager.swift; sourceTree = "<group>"; };
+		CDE4F47828F99D680093B3A7 /* DaysWeatherModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaysWeatherModel.swift; sourceTree = "<group>"; };
+		CDE4F47A28F99E270093B3A7 /* NetWorkManager_Days.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWorkManager_Days.swift; sourceTree = "<group>"; };
+		CDE4F47C28F9A1010093B3A7 /* DaysDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaysDataManager.swift; sourceTree = "<group>"; };
+		CDE4F48028F9E3420093B3A7 /* DaysWeatherCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaysWeatherCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +70,7 @@
 			children = (
 				CD48EB8C28F57D9B00AAF98E /* NetworkManager_Current.swift */,
 				CD48EB9328F5CD9B00AAF98E /* NetWorkManager_Short.swift */,
+				CDE4F47A28F99E270093B3A7 /* NetWorkManager_Days.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -78,11 +87,13 @@
 		CD5E23A028F3193800C4096D /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				CD6FB89E28F728FB00639E11 /* CurrentDataManager.swift */,
-				CD6FB8A428F7335400639E11 /* ShortDataManager.swift */,
-				CD48EB8E28F57DD700AAF98E /* CurrnetWeatherModel.swift */,
-				CD6FB8A228F730D800639E11 /* ShortWeatherModel.swift */,
 				CDA2762428F8586500428435 /* SkyIconManager.swift */,
+				CD6FB89E28F728FB00639E11 /* CurrentDataManager.swift */,
+				CD48EB8E28F57DD700AAF98E /* CurrnetWeatherModel.swift */,
+				CD6FB8A428F7335400639E11 /* ShortDataManager.swift */,
+				CD6FB8A228F730D800639E11 /* ShortWeatherModel.swift */,
+				CDE4F47C28F9A1010093B3A7 /* DaysDataManager.swift */,
+				CDE4F47828F99D680093B3A7 /* DaysWeatherModel.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -92,6 +103,7 @@
 			children = (
 				CD75655E28F30DB0004717B3 /* Main.storyboard */,
 				CD5E23AB28F31F1E00C4096D /* HourWeatherCell.swift */,
+				CDE4F48028F9E3420093B3A7 /* DaysWeatherCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -210,13 +222,17 @@
 			files = (
 				CD75655928F30DB0004717B3 /* AppDelegate.swift in Sources */,
 				CD48EB8F28F57DD700AAF98E /* CurrnetWeatherModel.swift in Sources */,
+				CDE4F47B28F99E270093B3A7 /* NetWorkManager_Days.swift in Sources */,
 				CD6FB89F28F728FB00639E11 /* CurrentDataManager.swift in Sources */,
 				CD6FB8A128F72A2D00639E11 /* CustomNotificationCenter.swift in Sources */,
 				CD5E23AC28F31F1E00C4096D /* HourWeatherCell.swift in Sources */,
+				CDE4F47D28F9A1010093B3A7 /* DaysDataManager.swift in Sources */,
 				CD48EB9428F5CD9B00AAF98E /* NetWorkManager_Short.swift in Sources */,
 				CD48EB8D28F57D9B00AAF98E /* NetworkManager_Current.swift in Sources */,
 				CD5E23A428F319E700C4096D /* WeatherViewController.swift in Sources */,
 				CD75655B28F30DB0004717B3 /* SceneDelegate.swift in Sources */,
+				CDE4F48128F9E3420093B3A7 /* DaysWeatherCell.swift in Sources */,
+				CDE4F47928F99D680093B3A7 /* DaysWeatherModel.swift in Sources */,
 				CD48EB9228F57F7500AAF98E /* Constants.swift in Sources */,
 				CD6FB8A528F7335400639E11 /* ShortDataManager.swift in Sources */,
 				CD6FB8A328F730D800639E11 /* ShortWeatherModel.swift in Sources */,

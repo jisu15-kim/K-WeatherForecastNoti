@@ -41,7 +41,7 @@ final class NetworkManager {
     private func performRequest(with urlString: String, completion: @escaping NetworkCompletion) {
         //print(#function)
         guard let url = URL(string: urlString) else { return }
-        print("네트워크 매니저의 url : \(url)")
+//        print("네트워크 매니저의 url : \(url)")
 
 
         let session = URLSession(configuration: .default)

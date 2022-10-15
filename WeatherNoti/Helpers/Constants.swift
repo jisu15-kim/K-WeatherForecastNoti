@@ -11,14 +11,24 @@ import UIKit
 
 // 데이터 영역에 저장 (열거형, 구조체 다 가능 / 전역 변수로도 선언 가능)
 // 사용하게될 API 문자열 묶음
+struct TodayModel {
+    let year: String
+    let month: String
+    let date: String
+    let dayOfWeek: String
+}
+
 public enum WeatherApi {
     static let requestUrl = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/"
     static let currentParam = "getUltraSrtNcst" // 현재 기준 정보
     static let shortParam = "getVilageFcst" // 단기 시간별 예측
     static let serviceKey = "O%2FG920ZjfGIFYshoBYqghwh3hF22e6g9KOcQj6T2D1eAw6LqO18gKbSGOTmmvhyaVPkiQmnh3qQfhMNvU3A4YQ%3D%3D"
+    static let daysRequestUrl = "https://apis.data.go.kr/1360000/MidFcstInfoService/getMidTa"
+//    static let daysParam = "MidFcstInfoService"
+    static let daysServiceKey = "O%2FG920ZjfGIFYshoBYqghwh3hF22e6g9KOcQj6T2D1eAw6LqO18gKbSGOTmmvhyaVPkiQmnh3qQfhMNvU3A4YQ%3D%3D"
 }
 
-//http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst?serviceKey=O%2FG920ZjfGIFYshoBYqghwh3hF22e6g9KOcQj6T2D1eAw6LqO18gKbSGOTmmvhyaVPkiQmnh3qQfhMNvU3A4YQ%3D%3D&pageNo=1&numOfRows=1000&dataType=JSON&base_date=20221011&base_time=1940&nx=55&ny=127
+//https://apis.data.go.kr/1360000/MidFcstInfoService/getMidTa?serviceKey=O%2FG920ZjfGIFYshoBYqghwh3hF22e6g9KOcQj6T2D1eAw6LqO18gKbSGOTmmvhyaVPkiQmnh3qQfhMNvU3A4YQ%3D%3D&pageNo=1&numOfRows=1000&dataType=JSON&regId=11B10101&tmFc=202210141800
 
 public struct UserInfo {
     
@@ -34,8 +44,17 @@ public struct UserInfo {
         formatter.dateStyle = .long
         formatter.dateFormat = "yyyyMMdd" //데이터 포멧 설정
         let date = formatter.string(from: Date()) //문자열로 바꾸기
-        print("날짜: \(date)")
         return date
+    }
+    
+    func getCurrentTitleDate() -> TodayModel {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .long
+        formatter.dateFormat = "yyyy-MMM-dd-EE" //데이터 포멧 설정
+        let date = formatter.string(from: Date()) //문자열로 바꾸기
+        let newDate = date.split(separator: "-")
+        let model = TodayModel(year: String(newDate[0]), month: String(newDate[1]), date: String(newDate[2]), dayOfWeek: String(newDate[3]))
+        return model
     }
     
     private func getYesterdayDate() -> String {
@@ -44,7 +63,6 @@ public struct UserInfo {
         yFormatter.dateStyle = .long
         yFormatter.dateFormat = "yyyyMMdd" //데이터 포멧 설정
         let date = yFormatter.string(from: yesterday) //문자열로 바꾸기
-        print("날짜: \(date)")
         return date
     }
     

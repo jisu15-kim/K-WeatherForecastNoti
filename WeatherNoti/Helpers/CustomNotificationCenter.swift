@@ -10,4 +10,6 @@ import UIKit
 extension Notification.Name {
     static let currentWeatherData = Notification.Name("currentWeatherData")
     static let shortWeatherData = Notification.Name("shortWeatherData")
+    static let daysWeatherData = Notification.Name("hourWeatherData")
+
 }

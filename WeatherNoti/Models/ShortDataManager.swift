@@ -78,7 +78,7 @@ final class ShortDataManager {
         }
         data.append(ShortWeatherModel(time: time ?? "", temp: temp ?? "", pty: pty ?? "", sky: sky ?? ""))
         self.shortWeatherModels = data
-        dump(shortWeatherModels)
+        //dump(shortWeatherModels)
     }
     
     func getShortWeatherModels() -> [ShortWeatherModel] {
