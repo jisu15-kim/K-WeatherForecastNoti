@@ -18,7 +18,10 @@ final class DaysDataManager {
     
     public func setupDaysNetworks() {
         let today = userInfo.getDaysNowData()[1]
-        let now = userInfo.getDaysNowData()[0]
+        var now = userInfo.getDaysNowData()[0]
+        if now == "600" {
+            now = "0600"
+        }
         
         networkManager.fetchDaysWeatherData(time: "\(today)\(now)") { result in
             //print("VC의 네트워크매니저 FetchData 실행")

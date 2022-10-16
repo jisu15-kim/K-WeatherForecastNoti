@@ -22,8 +22,8 @@ class WeatherViewController: UIViewController, UITableViewDelegate {
     private var shortDataManager = ShortDataManager()
     private var daysDataManager = DaysDataManager()
     
+    var gpsManager = GPSManager.shared
     private var networkManager = NetworkManager.shared
-    private var gpsManager = GPSManager.shared
     private var skyIconManager = SkyIconManager()
     private var userInfo = UserInfo.shared
     
@@ -32,13 +32,15 @@ class WeatherViewController: UIViewController, UITableViewDelegate {
     private var daysData: [DaysWeatherModel] = []
     // 컬렌션뷰의 레이아웃 담당 객체
     private var flowLayout = UICollectionViewFlowLayout()
-    private var locationManager = CLLocationManager()
     
-    private var latitude: Double?
-    private var longitude: Double?
+    private let daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"]
     
-    private var nx: Int?
-    private var ny: Int?
+    var latitude: Double?
+    var longitude: Double?
+    var nx: Int?
+    var ny: Int?
+    var locationManager: CLLocationManager = CLLocationManager() // location manager
+    var currentLocation: CLLocation! // 내 위치 저장
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,7 +49,6 @@ class WeatherViewController: UIViewController, UITableViewDelegate {
         setupCurrentUI()
         setupNotificationCenter()
         getLocationInfo()
-        daysDataManager.setupDaysNetworks()
     }
     
     // 초기 한번 데이터 세팅
@@ -60,10 +61,10 @@ class WeatherViewController: UIViewController, UITableViewDelegate {
     }
     
     private func getLocationInfo(){
-        locationManager = CLLocationManager()
         locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestWhenInUseAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
+//        locationManager.requestWhenInUseAuthorization()
+        locationManager.requestLocation()
         
         if CLLocationManager.locationServicesEnabled() {
             locationManager.startUpdatingLocation()
@@ -72,21 +73,13 @@ class WeatherViewController: UIViewController, UITableViewDelegate {
             print("GPS를 못받아왔어요")
         }
         locationManager.startUpdatingLocation()
+        
     }
     
-    private func refreshData() {
+    func fetchData() {
         currentDataManager.setupCurrentNetworks(nx: nx!, ny: ny!)
         shortDataManager.setupShortNetworks(nx: nx!, ny: ny!)
-    }
-    
-    private func convertGPS() {
-        guard let lati = latitude else { return }
-        guard let long = longitude else { return }
-        print("위도 : \(lati), 경도 : \(long)")
-        let data = gpsManager.convertGRID_GPS(mode: 0, lat_X: lati, lng_Y: long)
-        nx = data.x
-        ny = data.y
-        refreshData()
+        daysDataManager.setupDaysNetworks()
     }
     
     private func setupNotificationCenter() {
@@ -98,10 +91,23 @@ class WeatherViewController: UIViewController, UITableViewDelegate {
     private func setupCurrentUI() {
         todayModel = userInfo.getCurrentTitleDate() // 오늘 정보 받아와 업데이트
         guard let safeModel = todayModel else { return }
-        dateLabel.text = "\(safeModel.dayOfWeek), \(safeModel.date) \(safeModel.month)"
+        dateLabel.text = "\(safeModel.month) \(safeModel.date)일 \(safeModel.dayOfWeek)요일"
     }
     
-    // CurrentDataManager에서 완료된 데이터를 받음
+    // MARK: - 컬렉션뷰 UI 세팅 - Short
+    private func setupCollectionViewLayout() {
+        flowLayout.scrollDirection = .horizontal
+        let cellWidth = hourCollectionView.frame.width / 4 - 20
+        flowLayout.itemSize = CGSize(width: cellWidth, height: hourCollectionView.frame.height - 20)
+        // 아이템 사이 간격 설정
+        flowLayout.minimumLineSpacing = 5
+        
+        // 컬렉션뷰의 속성에 할당
+        hourCollectionView.collectionViewLayout = flowLayout
+    }
+    
+    // MARK: - 네트워크 데이터 수신 및 UI 세팅
+    // CurrentDataManager에서 완료된 데이터를 받아서 UI 세팅
     @objc func fetchCurrentNetworkUI(_ data: Notification) {
         
         if let currentModel = data.object as? CurrentWeatherModel {
@@ -119,43 +125,30 @@ class WeatherViewController: UIViewController, UITableViewDelegate {
             self.updateTimeLabel.text = "\(time) 업데이트 기준"
         }
     }
-    // ShortDataManager에서 완료된 데이터를 받음
+    // ShortDataManager에서 완료된 데이터를 받아서 UI 세팅
     @objc func fetchShortNetworkUI(_ data: Notification) {
-
+        
         if let shortModel = data.object as? [ShortWeatherModel] {
             self.shortData = shortModel
             self.hourCollectionView.reloadData()
         }
     }
-    
+    // DaysDataManager에서 완료된 데이터를 받아서 UI 세팅
     @objc func fetchDaysNetworkUI(_ data: Notification) {
-
+        
         if let daysModel = data.object as? [DaysWeatherModel] {
             self.daysData = daysModel
             self.daysTableView.reloadData()
         }
     }
-    
-    private func setupCollectionViewLayout() {
-        flowLayout.scrollDirection = .horizontal
-        let cellWidth = hourCollectionView.frame.width / 4 - 20
-        flowLayout.itemSize = CGSize(width: cellWidth, height: hourCollectionView.frame.height - 20)
-        // 아이템 사이 간격 설정
-        flowLayout.minimumLineSpacing = 5
-        
-        // 컬렉션뷰의 속성에 할당
-        hourCollectionView.collectionViewLayout = flowLayout
-    }
-    
+
+    // MARK: - Refersh 버튼 클릭
     @IBAction func tempButtonTapped(_ sender: Any) {
-        currentDataManager.setupCurrentNetworks(nx: nx!, ny: ny!)
-        shortDataManager.setupShortNetworks(nx: nx!, ny: ny!)
-        daysDataManager.setupDaysNetworks()
-
+        fetchData()
     }
-
-    
 }
+
+// MARK: - UI 컬렉션뷰 세팅 - Short
 
 extension WeatherViewController: UICollectionViewDelegate {
     
@@ -172,7 +165,7 @@ extension WeatherViewController: UICollectionViewDataSource {
         let skyData = Int(data.sky)!
         let ptyData = Int(data.pty)!
         let time = Int(data.time)!
-
+        
         // 아이콘 정보 받아오는 로직
         let icon = skyIconManager.shortSkyIconLogic(sky: skyData, pty: ptyData, time: time)
         
@@ -198,6 +191,7 @@ extension WeatherViewController: UICollectionViewDataSource {
     }
 }
 
+// MARK: - UI 테이블뷰 세팅 - Days
 extension WeatherViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return daysData.count
@@ -207,7 +201,10 @@ extension WeatherViewController: UITableViewDataSource {
         let cell = daysTableView.dequeueReusableCell(withIdentifier: "DaysWeatherCell", for: indexPath) as! DaysWeatherCell
         let data = daysData[indexPath.row]
         
-        cell.dayLabel.text = "\(data.day)일뒤"
+        // 0 = 3일뒤, 1 = 4일뒤
+        let dayOfWeek = Date().dayofTheWeek(input: indexPath.row + 3)
+        
+        cell.dayLabel.text = "\(dayOfWeek)"
         cell.highTempLabel.text = "\(data.high)℃"
         cell.lowTempLabel.text = "\(data.low)℃"
         
@@ -215,45 +212,3 @@ extension WeatherViewController: UITableViewDataSource {
     }
 }
 
-extension WeatherViewController: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = manager.location else { return }
-        let cor = location.coordinate
-        let lati: Double = Double(cor.latitude)
-        let longi: Double = Double(cor.longitude)
-        latitude = lati
-        longitude = longi
-        print("여기는 delegate 위도: \(lati), 경도: \(longi)")
-        convertGPS()
-    }
-}
-
-
-extension UIColor {
-    convenience init(red: Int, green: Int, blue: Int, a: Int = 0xFF) {
-        self.init(
-            red: CGFloat(red) / 255.0,
-            green: CGFloat(green) / 255.0,
-            blue: CGFloat(blue) / 255.0,
-            alpha: CGFloat(a) / 255.0
-        )
-    }
-    
-    convenience init(rgb: Int) {
-        self.init(
-            red: (rgb >> 16) & 0xFF,
-            green: (rgb >> 8) & 0xFF,
-            blue: rgb & 0xFF
-        )
-    }
-    
-    // let's suppose alpha is the first component (ARGB)
-    convenience init(argb: Int) {
-        self.init(
-            red: (argb >> 16) & 0xFF,
-            green: (argb >> 8) & 0xFF,
-            blue: argb & 0xFF,
-            a: (argb >> 24) & 0xFF
-        )
-    }
-}

@@ -24,7 +24,7 @@ public enum WeatherApi {
     static let shortParam = "getVilageFcst" // 단기 시간별 예측
     static let serviceKey = "O%2FG920ZjfGIFYshoBYqghwh3hF22e6g9KOcQj6T2D1eAw6LqO18gKbSGOTmmvhyaVPkiQmnh3qQfhMNvU3A4YQ%3D%3D"
     static let daysRequestUrl = "https://apis.data.go.kr/1360000/MidFcstInfoService/getMidTa"
-//    static let daysParam = "MidFcstInfoService"
+    //    static let daysParam = "MidFcstInfoService"
     static let daysServiceKey = "O%2FG920ZjfGIFYshoBYqghwh3hF22e6g9KOcQj6T2D1eAw6LqO18gKbSGOTmmvhyaVPkiQmnh3qQfhMNvU3A4YQ%3D%3D"
 }
 
@@ -37,7 +37,7 @@ public struct UserInfo {
     // 여러객체를 추가적으로 생성하지 못하도록 설정
     private init() {}
     
-//    static var date = Date()
+    //    static var date = Date()
     
     private func getCurrentDate() -> String {
         let formatter = DateFormatter()
@@ -56,7 +56,6 @@ public struct UserInfo {
         let model = TodayModel(year: String(newDate[0]), month: String(newDate[1]), date: String(newDate[2]), dayOfWeek: String(newDate[3]))
         return model
     }
-    
     
     private func getYesterdayDate() -> String {
         let yesterday = Date(timeIntervalSinceNow:-86400)
@@ -116,8 +115,6 @@ public struct UserInfo {
     }
     
     
-    
-    
     // 사용하게될 Cell 문자열 묶음
     public struct Cell {
         static let musicCellIdentifier = "MusicCell"
@@ -136,4 +133,54 @@ public struct UserInfo {
     
     
     //let REQUEST_URL = "https://itunes.apple.com/search?"
+}
+
+
+extension Date {
+    
+    func dayofTheWeek(input: Int) -> String {
+        var index = -1 + input
+        if index >= 6 {
+            index -= 6
+        }
+        
+        let dayNumber = Calendar.current.component(.weekday, from: self)
+        // day number starts from 1 but array count from 0
+        return daysOfTheWeek[dayNumber + index]
+    }
+    
+    private var daysOfTheWeek: [String] {
+        return  ["일", "월", "화", "수", "목", "금", "토"]
+    }
+}
+
+
+
+extension UIColor {
+    convenience init(red: Int, green: Int, blue: Int, a: Int = 0xFF) {
+        self.init(
+            red: CGFloat(red) / 255.0,
+            green: CGFloat(green) / 255.0,
+            blue: CGFloat(blue) / 255.0,
+            alpha: CGFloat(a) / 255.0
+        )
+    }
+    
+    convenience init(rgb: Int) {
+        self.init(
+            red: (rgb >> 16) & 0xFF,
+            green: (rgb >> 8) & 0xFF,
+            blue: rgb & 0xFF
+        )
+    }
+    
+    // let's suppose alpha is the first component (ARGB)
+    convenience init(argb: Int) {
+        self.init(
+            red: (argb >> 16) & 0xFF,
+            green: (argb >> 8) & 0xFF,
+            blue: argb & 0xFF,
+            a: (argb >> 24) & 0xFF
+        )
+    }
 }

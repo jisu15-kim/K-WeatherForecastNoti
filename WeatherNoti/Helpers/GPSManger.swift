@@ -103,6 +103,23 @@ final class GPSManager {
         
     }
     
+    func getCurrentAdress(lati: Double, longi: Double) {
+        let location = CLLocation(latitude: lati, longitude: longi)
+        let geocoder = CLGeocoder()
+        let locale = Locale(identifier: "Ko-kr")
+        geocoder.reverseGeocodeLocation(location, preferredLocale: locale) { [weak self] placemarks, _ in
+            guard let placemarks = placemarks,
+                  let address = placemarks.last
+            else { return }
+            DispatchQueue.main.async {
+                print("adress: \(placemarks)")
+//                print("시: \(address.locality)" ?? "Error to fetch Address")
+//                print("구: \(address.subLocality)" ?? "Error to fetch Address")
+                
+            }
+        }
+    }
+    
     struct LatXLngY {
         public var lat: Double
         public var lng: Double
