@@ -139,14 +139,42 @@ public struct UserInfo {
 extension Date {
     
     func dayofTheWeek(input: Int) -> String {
+        // 현재 시간 - Int
+        let formatter = DateFormatter()
+        formatter.timeStyle = .medium
+        formatter.dateFormat = "HHmm"
+        guard let now = Int(formatter.string(from: Date())) else { return "" }
+        
+        // 업데이트 시간은 06시, 18시 이므로, offset 값
+        var offsetDate = 0
+        // Offset 값 조절
+        if 0 <= now && now < 600 {
+            offsetDate = -1
+        } else if 600 <= now && now < 1800 {
+            offsetDate = 0
+        } else if 1800..<2359 ~= now {
+            offsetDate = 0
+        } else {
+            // 혹시.. 모든값이 오류라면 ?
+            offsetDate = -1
+        }
+        
+        // 요일 값 정제
         var index = -1 + input
         if index >= 6 {
             index -= 6
         }
         
+        // 현재 요일 값
         let dayNumber = Calendar.current.component(.weekday, from: self)
         // day number starts from 1 but array count from 0
-        return daysOfTheWeek[dayNumber + index]
+        
+        // 최종 값 정제
+        var result = index + dayNumber + offsetDate
+        if result >= 6 {
+            result -= 6
+        }
+        return daysOfTheWeek[result]
     }
     
     private var daysOfTheWeek: [String] {

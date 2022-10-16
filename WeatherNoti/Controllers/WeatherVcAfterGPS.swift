@@ -14,7 +14,7 @@ extension WeatherViewController: CLLocationManagerDelegate, UIAlertViewDelegate 
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("GPS를 받아오는데 에러 발생")
     }
-    
+    // MARK: - GPS 데이터 받아오기
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         locationManager = manager
         if CLLocationManager.authorizationStatus() == .authorizedWhenInUse {
@@ -29,7 +29,7 @@ extension WeatherViewController: CLLocationManagerDelegate, UIAlertViewDelegate 
             // 변환한 X/Y 값을 활용해 호출
             fetchData()
         }
-        
+        // 에러시 Alert
         if CLLocationManager.locationServicesEnabled() {
             if CLLocationManager.authorizationStatus() == .denied || CLLocationManager.authorizationStatus() == .restricted {
                 let alert = UIAlertController(title: "오류 발생", message: "위치 서비스 기능이 꺼져있음", preferredStyle: .alert)
