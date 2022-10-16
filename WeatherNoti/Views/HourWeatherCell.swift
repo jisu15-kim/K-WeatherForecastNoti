@@ -12,6 +12,7 @@ class HourWeatherCell: UICollectionViewCell {
     @IBOutlet weak var hourLabel: UILabel!
     @IBOutlet weak var hourImage: UIImageView!
     @IBOutlet weak var hourDegree: UILabel!
+    @IBOutlet weak var typeLabel: UILabel!
     
     
 }

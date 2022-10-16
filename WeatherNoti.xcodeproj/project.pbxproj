@@ -29,6 +29,8 @@
 		CDE4F47B28F99E270093B3A7 /* NetWorkManager_Days.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE4F47A28F99E270093B3A7 /* NetWorkManager_Days.swift */; };
 		CDE4F47D28F9A1010093B3A7 /* DaysDataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE4F47C28F9A1010093B3A7 /* DaysDataManager.swift */; };
 		CDE4F48128F9E3420093B3A7 /* DaysWeatherCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDE4F48028F9E3420093B3A7 /* DaysWeatherCell.swift */; };
+		CDFCC51428FBF82100897519 /* NVActivityIndicatorView in Frameworks */ = {isa = PBXBuildFile; productRef = CDFCC51328FBF82100897519 /* NVActivityIndicatorView */; };
+		CDFCC51628FBF82500897519 /* NVActivityIndicatorViewExtended in Frameworks */ = {isa = PBXBuildFile; productRef = CDFCC51528FBF82500897519 /* NVActivityIndicatorViewExtended */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +58,7 @@
 		CDE4F47A28F99E270093B3A7 /* NetWorkManager_Days.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetWorkManager_Days.swift; sourceTree = "<group>"; };
 		CDE4F47C28F9A1010093B3A7 /* DaysDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaysDataManager.swift; sourceTree = "<group>"; };
 		CDE4F48028F9E3420093B3A7 /* DaysWeatherCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DaysWeatherCell.swift; sourceTree = "<group>"; };
+		CDFCC51228FBF81600897519 /* NVActivityIndicatorView */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = NVActivityIndicatorView; path = ../../../Downloads/NVActivityIndicatorView; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +66,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CDFCC51428FBF82100897519 /* NVActivityIndicatorView in Frameworks */,
+				CDFCC51628FBF82500897519 /* NVActivityIndicatorViewExtended in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,6 +132,7 @@
 			children = (
 				CD75655728F30DB0004717B3 /* WeatherNoti */,
 				CD75655628F30DB0004717B3 /* Products */,
+				CDFCC51128FBF81600897519 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -155,6 +161,14 @@
 			path = WeatherNoti;
 			sourceTree = "<group>";
 		};
+		CDFCC51128FBF81600897519 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CDFCC51228FBF81600897519 /* NVActivityIndicatorView */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -171,6 +185,10 @@
 			dependencies = (
 			);
 			name = WeatherNoti;
+			packageProductDependencies = (
+				CDFCC51328FBF82100897519 /* NVActivityIndicatorView */,
+				CDFCC51528FBF82500897519 /* NVActivityIndicatorViewExtended */,
+			);
 			productName = WeatherNoti;
 			productReference = CD75655528F30DB0004717B3 /* WeatherNoti.app */;
 			productType = "com.apple.product-type.application";
@@ -464,6 +482,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CDFCC51328FBF82100897519 /* NVActivityIndicatorView */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NVActivityIndicatorView;
+		};
+		CDFCC51528FBF82500897519 /* NVActivityIndicatorViewExtended */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = NVActivityIndicatorViewExtended;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CD75654D28F30DB0004717B3 /* Project object */;
 }

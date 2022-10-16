@@ -7,8 +7,10 @@
 
 import UIKit
 import CoreLocation
+import NVActivityIndicatorView
+import NVActivityIndicatorViewExtended
 
-class WeatherViewController: UIViewController, UITableViewDelegate {
+class WeatherViewController: UIViewController, UITableViewDelegate, NVActivityIndicatorViewable {
     
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var currentDegreeLabel: UILabel!
@@ -18,14 +20,22 @@ class WeatherViewController: UIViewController, UITableViewDelegate {
     @IBOutlet weak var hourCollectionView: UICollectionView!
     @IBOutlet weak var daysTableView: UITableView!
     
+    private var indiCheck: [String] = []
+    
     private var currentDataManager = CurrentDataManager()
     private var shortDataManager = ShortDataManager()
     private var daysDataManager = DaysDataManager()
+    
+    private var currentIsActive = false
+    private var shortIsActive = false
+    private var daysIsActive = false
     
     var gpsManager = GPSManager.shared
     private var networkManager = NetworkManager.shared
     private var skyIconManager = SkyIconManager()
     private var userInfo = UserInfo.shared
+    
+    var indicatorCount: Int = 0
     
     private var todayModel: TodayModel?
     private var shortData: [ShortWeatherModel] = []
@@ -45,6 +55,7 @@ class WeatherViewController: UIViewController, UITableViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupInit()
+        setupIndicator()
         setupCollectionViewLayout()
         setupCurrentUI()
         setupNotificationCenter()
@@ -60,10 +71,30 @@ class WeatherViewController: UIViewController, UITableViewDelegate {
         view.backgroundColor = UIColor(red: 16, green: 16, blue: 59, a: 255)
     }
     
+    func setupIndicator() {
+        
+        startAnimating(CGSize(width: 100, height: 100), message: "데이터를 불러오는 중이에요", messageFont: .systemFont(ofSize: 15), type: .ballRotateChase, color: .white, padding: 0, backgroundColor: .gray, textColor: .white)
+    }
+    
+    func checkComplete(type: String) {
+        indiCheck.append(type)
+        switch indiCheck.count {
+        case 1:
+            NVActivityIndicatorPresenter.sharedInstance.setMessage("데이터를 열심히 불러오고 있어요")
+        case 2:
+            NVActivityIndicatorPresenter.sharedInstance.setMessage("거의 다 됐어요")
+        case 3:
+            stopAnimating()
+            indiCheck = []
+        default:
+            return
+        }
+    }
+    
     private func getLocationInfo(){
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyKilometer
-//        locationManager.requestWhenInUseAuthorization()
+        //        locationManager.requestWhenInUseAuthorization()
         locationManager.requestLocation()
         
         if CLLocationManager.locationServicesEnabled() {
@@ -73,7 +104,6 @@ class WeatherViewController: UIViewController, UITableViewDelegate {
             print("GPS를 못받아왔어요")
         }
         locationManager.startUpdatingLocation()
-        
     }
     
     func fetchData() {
@@ -123,6 +153,8 @@ class WeatherViewController: UIViewController, UITableViewDelegate {
             // 시간 중간에 : 넣기
             time.insert(contentsOf: ":", at: time.index(time.startIndex, offsetBy: 2))
             self.updateTimeLabel.text = "\(time) 업데이트 기준"
+            self.currentIsActive = true
+            checkComplete(type: "current")
         }
     }
     // ShortDataManager에서 완료된 데이터를 받아서 UI 세팅
@@ -131,6 +163,8 @@ class WeatherViewController: UIViewController, UITableViewDelegate {
         if let shortModel = data.object as? [ShortWeatherModel] {
             self.shortData = shortModel
             self.hourCollectionView.reloadData()
+            self.shortIsActive = true
+            checkComplete(type: "short")
         }
     }
     // DaysDataManager에서 완료된 데이터를 받아서 UI 세팅
@@ -139,12 +173,19 @@ class WeatherViewController: UIViewController, UITableViewDelegate {
         if let daysModel = data.object as? [DaysWeatherModel] {
             self.daysData = daysModel
             self.daysTableView.reloadData()
+            self.daysIsActive = true
+            checkComplete(type: "days")
         }
     }
-
+    
     // MARK: - Refersh 버튼 클릭
     @IBAction func tempButtonTapped(_ sender: Any) {
+        daysIsActive = false
+        currentIsActive = false
+        shortIsActive = false
         fetchData()
+        startAnimating(CGSize(width: 100, height: 100), message: "데이터를 불러오는 중이에요", messageFont: .systemFont(ofSize: 15), type: .ballRotateChase, color: .white, padding: 0, backgroundColor: .gray, textColor: .white)
+        
     }
 }
 
@@ -182,6 +223,10 @@ extension WeatherViewController: UICollectionViewDataSource {
         cell.hourImage.image = icon
         cell.hourLabel.text = stringTime
         cell.hourDegree.text = data.temp
+        cell.typeLabel.text = ""
+        if indexPath.row == 0 {
+            cell.typeLabel.text = "지금"
+        }
         
         cell.layer.borderWidth = 2 // rgba(37,37,78,255)
         cell.layer.borderColor = CGColor(red: 37/255, green: 37/255, blue: 78/255, alpha: 255/255)
