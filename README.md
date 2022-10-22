@@ -17,9 +17,9 @@
 * 개발기간: 22.10.10 ~ 22.10.16
 
 <div width="100%">
-<img width="600" alt="스크린샷 2022-10-22 20 17 04" src="https://user-images.githubusercontent.com/108998071/197336146-654d0b65-8875-477f-975f-6f6af8068af4.png">
-<img src="https://user-images.githubusercontent.com/108998071/197337271-a32ff0bc-b985-4b9c-8e46-868952b4ccfa.gif" width="48%"/>
-<img src="https://user-images.githubusercontent.com/108998071/197337275-55f66831-21a5-4ccc-aaaa-89374debf600.gif" width="48%"/>
+<img width="800" alt="스크린샷 2022-10-22 20 17 04" src="https://user-images.githubusercontent.com/108998071/197336146-654d0b65-8875-477f-975f-6f6af8068af4.png">
+<img src="https://user-images.githubusercontent.com/108998071/197337271-a32ff0bc-b985-4b9c-8e46-868952b4ccfa.gif" width="40%"/>
+<img src="https://user-images.githubusercontent.com/108998071/197337275-55f66831-21a5-4ccc-aaaa-89374debf600.gif" width="40%"/>
 </div>
 
 ## 문제와 해결
